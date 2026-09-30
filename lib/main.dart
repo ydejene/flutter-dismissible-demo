@@ -72,13 +72,38 @@ class _DismissibleDemoScreenState extends State<DismissibleDemoScreen> {
                     color: Colors.green,
                     alignment: Alignment.centerLeft,
                     padding: const EdgeInsets.only(left: 20),
-                    child: const Icon(Icons.archive, color: Colors.white),
+                    child: const Row(
+                      children: [
+                        Icon(Icons.archive, color: Colors.white),
+                        SizedBox(width: 8),
+                        Text(
+                          'Archive',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                   secondaryBackground: Container(
                     color: Colors.red,
                     alignment: Alignment.centerRight,
                     padding: const EdgeInsets.only(right: 20),
-                    child: const Icon(Icons.delete, color: Colors.white),
+                    child: const Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Text(
+                          'Delete',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(width: 8),
+                        Icon(Icons.delete, color: Colors.white),
+                      ],
+                    ),
                   ),
                   // acts like an interceptor safety net (prevents deleting data accidentally by a clumsy swipe )
                   confirmDismiss: (DismissDirection direction) async {
@@ -88,6 +113,8 @@ class _DismissibleDemoScreenState extends State<DismissibleDemoScreen> {
                       // Showing a dialog takes time because we have to wait for a user to physically press a button (use await)
                       return await showDialog<bool>(
                         context: context,
+                        // Setting barrierDismissible to false forces user to pick CANCEL or DELETE
+                        barrierDismissible: false,
                         builder: (BuildContext context) {
                           return AlertDialog(
                             title: const Text('Confirm Delete'),
@@ -95,13 +122,18 @@ class _DismissibleDemoScreenState extends State<DismissibleDemoScreen> {
                               'Are you sure you want to permanentyl delete this notification?',
                             ),
                             actions: [
+                              // Navigator.of(context).pop(true/false) --> closes the dialog box and throws the true/false value back down to the Dismissible widget.
                               TextButton(
-                                // closes the dialog box and throws the true/false value back down to the Dismissible widget.
-                                onPressed: () => Navigator.of(
-                                  context,
-                                ).pop(true), // Returns true (Executes delete)
+                                onPressed: () => Navigator.of(context)
+                                    .pop(false), // Cancels the swipe explicitly
+
+                                child: const Text('CANCEL'),
+                              ),
+                              TextButton(
+                                onPressed: () => Navigator.of(context)
+                                    .pop(true), // confirms the swipe
                                 child: const Text(
-                                  'Delete',
+                                  'DELETE',
                                   style: TextStyle(color: Colors.red),
                                 ),
                               ),
@@ -109,23 +141,29 @@ class _DismissibleDemoScreenState extends State<DismissibleDemoScreen> {
                           );
                         },
                       );
+                      // return deleteConfirmed ?? false;
                     }
-                    // if swiped left to right (Archive), return true immediately without asking
-                    return true;
+                    return true; // Auto-archive on swip left-to-right
                   },
                   onDismissed: (direction) {
                     setState(() {
                       _notifications.removeAt(index);
                     });
                   },
-                  child: ListTile(
-                    leading: const Icon(
-                      Icons.mail_outline,
-                      color: Colors.blueAccent,
+                  child: Card(
+                    margin: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 5,
                     ),
-                    title: Text('notifications'),
-                    subtitle: const Text('Swipe to manage notifications'),
-                    trailing: const Icon(Icons.chevron_right),
+                    child: ListTile(
+                      leading: const Icon(
+                        Icons.mail_outline,
+                        color: Colors.blueAccent,
+                      ),
+                      title: Text(notification),
+                      subtitle: const Text('Swipe left to delelte, right to archive'),
+                      trailing: const Icon(Icons.chevron_right),
+                    ),
                   ),
                 );
               },
