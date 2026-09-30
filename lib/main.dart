@@ -50,7 +50,10 @@ class _DismissibleDemoScreenState extends State<DismissibleDemoScreen> {
       ),
       body: _notifications.isEmpty
           ? const Center(
-              child: Text('All caught up!', style: TextStyle(fontSize: 18)),
+              child: Text(
+                'No notifications here yet!',
+                style: TextStyle(fontSize: 18),
+              ),
             )
           : ListView.builder(
               itemCount: _notifications.length,
@@ -58,14 +61,24 @@ class _DismissibleDemoScreenState extends State<DismissibleDemoScreen> {
                 final notification = _notifications[index];
 
                 // will include the dismissible widget wrapping the tile
-                return ListTile(
-                  leading: const Icon(
-                    Icons.mail_outline,
-                    color: Colors.blueAccent,
+                return Dismissible(
+                  // key used to differentiate between the similar rows (like passport stamp)
+                  // value key changes the text to unique identifer
+                  key: ValueKey(notification),
+                  onDismissed: (direction) {
+                    setState(() {
+                      _notifications.removeAt(index);
+                    });
+                  },
+                  child: ListTile(
+                    leading: const Icon(
+                      Icons.mail_outline,
+                      color: Colors.blueAccent,
+                    ),
+                    title: Text('notifications'),
+                    subtitle: const Text('Swipe to manage notifications'),
+                    trailing: const Icon(Icons.chevron_right),
                   ),
-                  title: Text('notifications'),
-                  subtitle: const Text('Swipe to manage notifications'),
-                  trailing: const Icon(Icons.chevron_right),
                 );
               },
             ),
