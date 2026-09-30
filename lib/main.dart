@@ -32,6 +32,14 @@ class DismissibleDemoScreen extends StatefulWidget {
 
 // private state with the brain and muscles
 class _DismissibleDemoScreenState extends State<DismissibleDemoScreen> {
+  final List<String> _notifications = [
+    'Security Alert: New login detected from Chrome',
+    'GitHub: @Niyo11 requested a review on your PR',
+    'Canvas: Grade published for Mobile Dev Assignment 1',
+    'LinkedIn: 3 recruiters viewed your profile today',
+    'Spotify: Your Weekly Release Radar is updated',
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,9 +48,27 @@ class _DismissibleDemoScreenState extends State<DismissibleDemoScreen> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         centerTitle: true,
       ),
-      body: const Center(
-        child: Text('Our realistic inbox will go here!'),
-      ),
+      body: _notifications.isEmpty
+          ? const Center(
+              child: Text('All caught up!', style: TextStyle(fontSize: 18)),
+            )
+          : ListView.builder(
+              itemCount: _notifications.length,
+              itemBuilder: (context, index) {
+                final notification = _notifications[index];
+
+                // will include the dismissible widget wrapping the tile
+                return ListTile(
+                  leading: const Icon(
+                    Icons.mail_outline,
+                    color: Colors.blueAccent,
+                  ),
+                  title: Text('notifications'),
+                  subtitle: const Text('Swipe to manage notifications'),
+                  trailing: const Icon(Icons.chevron_right),
+                );
+              },
+            ),
     );
   }
 }
