@@ -13,8 +13,11 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
+      // global style manual for the entire application (appBar, buttons, text field)
       theme: ThemeData(
+        // fromSeed takes the blueAccent and automatically generates a complete palette of 20+ matching tones (dark blues, light blues, complementary grays, and accent colors)
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blueAccent),
+        // use Google’s absolute latest design system (Material 3)
         useMaterial3: true,
       ),
       home: const DismissibleDemoScreen(),
@@ -51,7 +54,7 @@ class _DismissibleDemoScreenState extends State<DismissibleDemoScreen> {
       body: _notifications.isEmpty
           ? const Center(
               child: Text(
-                'No notifications here yet!',
+                "You don't have any notification.",
                 style: TextStyle(fontSize: 18),
               ),
             )
@@ -65,6 +68,18 @@ class _DismissibleDemoScreenState extends State<DismissibleDemoScreen> {
                   // key used to differentiate between the similar rows (like passport stamp)
                   // value key changes the text to unique identifer
                   key: ValueKey(notification),
+                  background: Container(
+                    color: Colors.green,
+                    alignment: Alignment.centerLeft,
+                    padding: const EdgeInsets.only(left: 20),
+                    child: const Icon(Icons.archive, color: Colors.white),
+                  ),
+                  secondaryBackground: Container(
+                    color: Colors.red,
+                    alignment: Alignment.centerRight,
+                    padding: const EdgeInsets.only(right: 20),
+                    child: const Icon(Icons.delete, color: Colors.white),
+                  ),
                   onDismissed: (direction) {
                     setState(() {
                       _notifications.removeAt(index);
