@@ -42,6 +42,12 @@ During the live presentation, the following three constructor properties are sho
 ## Final UI Screenshot
 ![App Screenshot](screenshot.png)
 
+## AI Assistance Disclosure
+In accordance with the course academic integrity guidelines, Artificial Intelligence (AI) was utilized during the development of this project under the following parameters:
+- **Role:** AI acted strictly as an interactive coding tutor and conceptual mentor, explaining the underlying architectural mechanics of the `Dismissible` widget tree, Dart's dynamic list mutation, and Flutter's Material 3 theme properties.
+- **Implementation:** The code architecture, file structures, and Git atomic commits were written and executed step-by-step manually by the student to reinforce structural muscle memory and framework syntax understanding. No bulk automated generation or uncredited tutorial code blocks were copied directly into production.
+
+
 ---
 *Disclaimer: This project was built for an educational presentation. External learning resources from the official Flutter Documentation cookbook were referenced to ensure production-level layout practices.*
 
