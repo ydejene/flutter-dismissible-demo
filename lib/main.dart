@@ -80,6 +80,39 @@ class _DismissibleDemoScreenState extends State<DismissibleDemoScreen> {
                     padding: const EdgeInsets.only(right: 20),
                     child: const Icon(Icons.delete, color: Colors.white),
                   ),
+                  // acts like an interceptor safety net (prevents deleting data accidentally by a clumsy swipe )
+                  confirmDismiss: (DismissDirection direction) async {
+                    // Check if the user swiped from right-to-left (Delete direction)
+                    if (direction == DismissDirection.endToStart) {
+                      // Show a pop-up dialog box and wait for the user's click
+                      // Showing a dialog takes time because we have to wait for a user to physically press a button (use await)
+                      return await showDialog<bool>(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: const Text('Confirm Delete'),
+                            content: const Text(
+                              'Are you sure you want to permanentyl delete this notification?',
+                            ),
+                            actions: [
+                              TextButton(
+                                // closes the dialog box and throws the true/false value back down to the Dismissible widget.
+                                onPressed: () => Navigator.of(
+                                  context,
+                                ).pop(true), // Returns true (Executes delete)
+                                child: const Text(
+                                  'Delete',
+                                  style: TextStyle(color: Colors.red),
+                                ),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    }
+                    // if swiped left to right (Archive), return true immediately without asking
+                    return true;
+                  },
                   onDismissed: (direction) {
                     setState(() {
                       _notifications.removeAt(index);
