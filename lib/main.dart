@@ -117,7 +117,7 @@ class _DismissibleDemoScreenState extends State<DismissibleDemoScreen> {
                         builder: (BuildContext context) {
                           return AlertDialog(
                             title: const Text('Confirm Delete'),
-                            content: const Text(
+                            content: Text(
                               "Are you sure you want to permanently delete:\n\n\"$notification\"?",
                             ),
                             actions: [
