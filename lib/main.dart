@@ -109,29 +109,28 @@ class _DismissibleDemoScreenState extends State<DismissibleDemoScreen> {
                   confirmDismiss: (DismissDirection direction) async {
                     // Check if the user swiped from right-to-left (Delete direction)
                     if (direction == DismissDirection.endToStart) {
-                      // Show a pop-up dialog box and wait for the user's click
-                      // Showing a dialog takes time because we have to wait for a user to physically press a button (use await)
-                      return await showDialog<bool>(
+                      // Store the dialog response safely in a nullable boolean variable
+                      final bool? deleteConfirmed = await showDialog<bool>(
                         context: context,
-                        // Setting barrierDismissible to false forces user to pick CANCEL or DELETE
-                        barrierDismissible: false,
+                        barrierDismissible:
+                            false, // Forces user to pick CANCEL or DELETE
                         builder: (BuildContext context) {
                           return AlertDialog(
                             title: const Text('Confirm Delete'),
                             content: const Text(
-                              'Are you sure you want to permanentyl delete this notification?',
+                              "Are you sure you want to permanently delete:\n\n\"$notification\"?",
                             ),
                             actions: [
-                              // Navigator.of(context).pop(true/false) --> closes the dialog box and throws the true/false value back down to the Dismissible widget.
                               TextButton(
-                                onPressed: () => Navigator.of(context)
-                                    .pop(false), // Cancels the swipe explicitly
+                                onPressed: () =>
+                                    Navigator.of(context)
+                                        .pop(false), // Returns false
 
                                 child: const Text('CANCEL'),
                               ),
                               TextButton(
                                 onPressed: () => Navigator.of(context)
-                                    .pop(true), // confirms the swipe
+                                    .pop(true), // Returns true
                                 child: const Text(
                                   'DELETE',
                                   style: TextStyle(color: Colors.red),
@@ -141,9 +140,11 @@ class _DismissibleDemoScreenState extends State<DismissibleDemoScreen> {
                           );
                         },
                       );
-                      // return deleteConfirmed ?? false;
+                      // The safety guard: If it's true or false, return it. If it's null, default safely to false.
+                      return deleteConfirmed ?? false;
                     }
-                    return true; // Auto-archive on swip left-to-right
+                    // Auto-archive on swipe right without triggering a pop-up
+                    return true;
                   },
                   onDismissed: (direction) {
                     setState(() {
@@ -161,7 +162,9 @@ class _DismissibleDemoScreenState extends State<DismissibleDemoScreen> {
                         color: Colors.blueAccent,
                       ),
                       title: Text(notification),
-                      subtitle: const Text('Swipe left to delelte, right to archive'),
+                      subtitle: const Text(
+                        'Swipe left to delelte, right to archive',
+                      ),
                       trailing: const Icon(Icons.chevron_right),
                     ),
                   ),
